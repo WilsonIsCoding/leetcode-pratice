@@ -1,0 +1,1 @@
+<p>這題主要是用map去做比較跟對比，一樣以數字的出現作為key值，如果沒有，那就創建這個key，如果有的話，就把這個key值的value+1，而最後比較複雜的是map轉array的運算，需要運用到entries，並將他們以Array.from的方式去進行運算，之後用sort排序，以value較大者放在前面，在用splice取k段陣列，最後在用map來取得key，這題比較棘手的是他的map轉出他要的array數值</p>
