@@ -53,28 +53,28 @@ myPromise
 
 ```bash
 class MyPromise {
-  constructor(executor) {
-    this.state = 'pending';
-    this.value = "";
-    this.reason = "";
-    try {
-      executor(this.resolve.bind(this));
-    } catch (error) {
-      this.reject(error);
+    constructor(executor) {
+        this.state = 'pending';
+        this.value = '';
+        this.reason = '';
+        try {
+            executor(this.resolve.bind(this));
+        } catch (error) {
+            this.reject(error);
+        }
     }
-  }
-  resolve(value) {
-    if (this.state === 'pending') {
-      this.value = value;
-      this.state = 'fulfilled';
+    resolve(value) {
+        if (this.state === 'pending') {
+            this.value = value;
+            this.state = 'fulfilled';
+        }
     }
-  }
-  reject(reason) {
-    if (this.state === 'pending') {
-      this.reason = reason;
-      this.state = 'rejected';
+    reject(reason) {
+        if (this.state === 'pending') {
+            this.reason = reason;
+            this.state = 'rejected';
+        }
     }
-  }
 }
 ```
 <p>首先這個Promise接受一個executive，並且透過執行這個executive他能夠去變更狀態(state)，也可以變更value</p>
@@ -104,16 +104,16 @@ this.onRejectedCallbacks = []
 <h3>新增then方法</h3>
 
 ```bash
+//錯誤的寫法，下面說為什麼
 then (onFulfilled, onRejected) {
-    if (this.status == 'fulfilled') {
+    if (this.state == 'fulfilled') {
         onFulfilled(this.value)
     }
 
-    if (this.status == 'rejected') {
+    if (this.state == 'rejected') {
         onRejected(this.reason)
     }
-    // 如果在第一次的executive後,state還是pending的話，就先儲存運算結果，並開始執行then裡面的function，直到state經過改動後才結束！
-    if (this.status == 'pending') {
+    if (this.state == 'pending') {
     this.onFulfilledCallbacks.push(function () {
         onFulfilled(this.value)
     })
@@ -124,3 +124,41 @@ then (onFulfilled, onRejected) {
 }
 
 ```
+
+<p>這邊有一個小問題</p>
+<p>要做出then的功能，首先想到透過then方法改變this狀態。如果返回this的話，會有什麼問题呢？</p>
+
+<p>想像一下，經過第一個then方法之後，Promise的狀態就改動了，而且改動後就不能在覆蓋，那接下來的then後面的fulfill跟reject就都沒有辦法執行了，所以在這邊then要回傳的不是原本的Promise本身，而是新的Promise!</p>
+
+<p>所以應該要用這樣的寫法才可以</p>
+
+```bash
+then(onFulfilled, onRejected) {
+    let newPromise;
+    if (this.state == 'fulfilled') {
+        newPromise = new Promise((resolve, reject) => {
+            let x = onfulfilled(this.value);
+            resolve(x);
+        });
+    }
+    if (this.state == 'rejected') {
+        newPromise = new Promise((resolve, reject) => {
+            let x = onRejected(this.reason);
+            reject(x);
+        });
+    }
+    if (this.state == 'pending') {
+        newPromise = new Promise((resolve, reject) => {
+            this.onFulfilledCallbacks.push(() => {
+                onFulfilled(this.value);
+            });
+            this.onRejectedCallbacks.push(() => {
+                onRejected(this.reason);
+            });
+        });
+    }
+}
+```
+
+<p>如果在第一個的promise是異步操作，那他的狀態就還會是pending，我們就先分別針對fulfill跟reject call back做儲存，而等到異步操作結束後，就會執行resolve，並把call back裡面的function以forEach的方式執行。</p>
+<p>而如果是同步的話，那狀態一定會是fulfill或是reject，那就可以直接去run 新的promise的resolve或是reject了。</p>
