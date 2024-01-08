@@ -43,24 +43,51 @@ class MyPromise {
       });
     }
     if (this.state == FULFILLED) {
-      newPromise = new Promise((resolve, reject) => {
+      newPromise = new MyPromise((resolve, reject) => {
         let x = onFulfilled(this.value);
         resolve(x);
       });
     }
+    if (this.state == REJECTED) {
+      newPromise = new MyPromise((resolve, reject) => {
+        let x = onRejected(this.value);
+        reject(x);
+      });
+    }
+    return newPromise;
   }
 }
-var promise = new MyPromise((resolve, reject) => {
-  setTimeout(function () {
-    resolve("test MyPromise resolve");
-  }, 100);
+// var promise = new MyPromise((resolve, reject) => {
+//   setTimeout(function () {
+//     resolve("test MyPromise resolve");
+//   }, 100);
+// });
+
+// promise.then(
+//   function (value) {
+//     console.log("success:", value);
+//   },
+//   function (reason) {
+//     console.log("failed:", reason);
+//   }
+// );
+const p1 = new MyPromise((resolve, reject) => {
+  resolve('ok');
 });
 
-promise.then(
-  function (value) {
-    console.log("success:", value);
-  },
-  function (reason) {
-    console.log("failed:", reason);
-  }
-);
+p1.then((res) => {
+  console.log('res1', res);
+  return 'ok2';
+})
+
+// 异步resovle
+const p2 = new MyPromise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('ok')
+  }, 1000);
+});
+
+p2.then((res) => {
+  console.log('res1', res);
+  return 'ok2';
+})

@@ -157,8 +157,69 @@ then(onFulfilled, onRejected) {
             });
         });
     }
+    //注意！！
+    return newPromise
+    //注意！！
 }
 ```
 
 <p>如果在第一個的promise是異步操作，那他的狀態就還會是pending，我們就先分別針對fulfill跟reject call back做儲存，而等到異步操作結束後，就會執行resolve，並把call back裡面的function以forEach的方式執行。</p>
 <p>而如果是同步的話，那狀態一定會是fulfill或是reject，那就可以直接去run 新的promise的resolve或是reject了。</p>
+
+<p>這會是這邊的重點。</p>
+
+<h3>但這邊還有一個問題要解決</h3>
+今天假設一個情境是我們仍然還有後續要接續的非同步動作要運作，但是因為第一個newPromise就已經改動了state，所以一個很重要的觀念在這邊
+
+<h2>then後面要回傳的就是一個新的Promise!!</h2>
+<p>否則無論你後面有多少個then去做鏈結，回傳的都會是第一個最初開始的myPromise</p>
+<h3>我們來看一個例子</h3>
+
+```bash
+const p1 = new MyPromise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('ok')
+  }, 1000);
+});
+
+const handle1 = (res) => {
+  // ok
+  console.log('res1', res);
+  // ok2要能夠成為下一個Promise的resolve回傳
+  return 'ok2';
+};
+
+const p2 = p1.then(handle1);
+
+const handle2 = (res) => {
+  // ok2
+  console.log('res2', res);
+};
+
+const p3 = p2.then(handle2)
+```
+
+<ul>
+<li>
+1.先創立一個promise，裡面有一個非同步的executive
+</li>
+<li>
+2.p2是個promise，並且是透過p1.then(handle1)得到
+</li>
+<li>
+3.p3是個promise，並且是透過p2.then(handle1)得到
+</li>
+</ul>
+<h3><b>如此一來，照這個邏輯順下來我們來整理一下我們做出了一個什麼東西</b></h3>
+
+<ul>
+<li>
+1.創立一個myPromise建構子，裡面包涵state(promise狀態)、value(fulfilled賦值)、reason(reject賦值)
+</li>
+<li>
+2.實做resolve、reject 方法，可以去改變state、value、reason(且這些都是單向的！！)
+</li>
+<li>
+3.建構then，使Promise可以用鏈式串連，並回傳新的Promise，使原本的Promise可以在非同步操作中重複操作！
+</li>
+</ul>
