@@ -39,23 +39,23 @@ function subarraySum(nums, k) {
 
 # 範例說明
 <h2>範例1</h2>
-1. 輸入: nums = [1, -1, 0, 0], k = 0
-2. 輸出: 6
-3. 數組:[1, -1] , [0] , [1, -1, 0] , [0] , [0, 0] , [1, -1, 0, 0]
+<p>1. 輸入: nums = [1, -1, 0, 0], k = 0</p>
+<p>2. 輸出: 6</p>
+<p>3. 數組:[1, -1] , [0] , [1, -1, 0] , [0] , [0, 0] , [1, -1, 0, 0]</p>
 
 ```
-| i  | nums[i] | prefixSum (当前前缀和) | prefixSum - k (期望的前缀和) | prefixSumCount       | prefixSum - k 在 prefixSumCount 中的值 | count |
+| i  | nums[i] | prefixSum (当前前缀和) | prefixSum - k (期望的前缀和)     | prefixSumCount       | prefixSum - k 在 prefixSumCount 中的值 | count |
 |----|---------|------------------------|------------------------------|----------------------|--------------------------------------|-------|
-| 0  | 1       | 1                      | 1                            | `{0: 1, 1: 1}`       | `prefixSumCount.get(1) → 1`         | 0     |
-| 1  | -1      | 0                      | 0                            | `{0: 2, 1: 1}`       | `prefixSumCount.get(0) → 2`         | 1     |
-| 2  | 0       | 0                      | 0                            | `{0: 3, 1: 1}`       | `prefixSumCount.get(0) → 3`         | 1+2=3     |
-| 3  | 0       | 0                      | 0                            | `{0: 4, 1: 1}`       | `prefixSumCount.get(0) → 4`         | 3+3=6     |
+| 0  | 1       | 1                      | 1                            | `{0: 1, 1: 1}`       | `prefixSumCount.get(1) → 1`          | 0     |
+| 1  | -1      | 0                      | 0                            | `{0: 2, 1: 1}`       | `prefixSumCount.get(0) → 2`          | 0+1=1     |
+| 2  | 0       | 0                      | 0                            | `{0: 3, 1: 1}`       | `prefixSumCount.get(0) → 3`          | 1+2=3     |
+| 3  | 0       | 0                      | 0                            | `{0: 4, 1: 1}`       | `prefixSumCount.get(0) → 4`          | 3+3=6     |
 ```
 
 <h2>範例2</h2>
-1. 輸入: nums = [1, 2, 3], k = 3
-2. 輸出: 2
-3. 解釋: 有兩個連續子陣列的總和為3，分別是[1, 2]和[3]
+<p>1. 輸入: nums = [1, 2, 3], k = 3</p>
+<p>2. 輸出: 2</p>
+<p>3. 解釋: 有兩個連續子陣列的總和為3，分別是[1, 2]和[3]</p>
 
 ```
 | i  | nums[i] | prefixSum (当前前缀和) | prefixSum - k (期望的前缀和) | prefixSumCount       | prefixSum - k 在 prefixSumCount 中的值 | count |
