@@ -24,6 +24,11 @@ var permuteUnique = function (nums) {
     permutations([], numsSort)
     return result;
 };
+// Input: nums = [1,1,2]
+// Output:
+// [[1,1,2],
+//  [1,2,1],
+//  [2,1,1]]
 //set功能：紀錄已經使用過的數字，避免重複使用
 //input: [1,1,2]
 //output: [[1,1,2], [1,2,1], [2,1,1]]
