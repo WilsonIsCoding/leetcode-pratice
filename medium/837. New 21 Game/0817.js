@@ -18,22 +18,22 @@
  * @return {number}
  */
 var new21Game = function (n, k, maxPts) {
-    if (k === 0 || k + maxPts < n) return 1
-    //dp[0] from 1;
-    let dp = new Array(maxPts).fill(0.0);
-    let result = 0; let slideWindow = 1;
-    dp[0] = 1.0;
-    for (let i = 1; i <= n; i++) {
-        let prod = slideWindow / maxPts
-        if (i >= k) {
-            result += prod
-        } else {
-            slideWindow += prod
-        }
-        if (i >= maxPts) {
-            slideWindow -= dp[i % maxPts]
-        }
-        dp[i % maxPts] = prod
+  if (k === 0 || k + maxPts < n) return 1;
+  let dp = new Array(maxPts).fill(0.0);
+  let result = 0;
+  let slideWindow = 1;
+  dp[0] = 1.0;
+  for (let i = 1; i <= n; i++) {
+    let prod = slideWindow / maxPts;
+    if (i >= k) {
+      result += prod;
+    } else {
+      slideWindow += prod;
     }
-    return result
+    if (i >= maxPts) {
+      slideWindow -= dp[i % maxPts];
+    }
+    dp[i % maxPts] = prod;
+  }
+  return result;
 };
