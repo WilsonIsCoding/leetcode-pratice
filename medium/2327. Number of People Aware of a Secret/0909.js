@@ -18,26 +18,28 @@
 // dp[4][0]=1,dp[4][1]=1,dp[3][2]=0,dp[3][3]=1
 var peopleAwareOfSecret = function (n, delay, forget) {
   const MOD = 1e9 + 7;
-  let dp = Array.from({ length: n + 1 }, () => Array(forget).fill(0));
-  dp[1][0] = 1;
-  for (let i = 2; i <= n; i++) {
-    for (let j = 1; j < forget; j++) {
-      dp[i][j] = dp[i - 1][j - 1] % MOD;
+  let dp = Array(n + 1).fill(0);
+  dp[1] = 1; // 第一天1個人知道秘密
+  for (let i = 1; i <= n; i++) {
+    const peopleToday = dp[i];
+    if (!peopleToday) continue;
+
+    // 從 i+delay 到 i+forget-1 這些天的人可以被分享秘密
+    for (let j = i + delay; j < i + forget && j <= n; j++) {
+      dp[j] = (dp[j] + peopleToday) % MOD;
     }
-    let newPerson = 0;
-    for (let k = delay; k < forget; k++) {
-      newPerson = (newPerson + dp[i - 1][k - 1]) % MOD;
-    }
-    dp[i][0] = newPerson;
+    console.log(dp);
   }
+
+  // 統計最後一天還記得秘密的人
   let result = 0;
-  for (let i = 0; i < forget; i++) {
-    result = (result + dp[n][i]) % MOD;
+  for (let i = Math.max(1, n - forget + 1); i <= n; i++) {
+    result = (result + dp[i]) % MOD;
   }
   return result;
 };
-let n = 4;
+let n = 12;
 let delay = 1;
-let forget = 3;
+let forget = 9;
 
 console.log(peopleAwareOfSecret(n, delay, forget));
