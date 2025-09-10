@@ -16,6 +16,7 @@ var minimumTeachings = function (n, languages, friendships) {
       friendshipsCannotSolves.push(friendships[i]);
     }
   }
+  if (friendshipsCannotSolves.length === 0) return 0;
   let studentSet = new Set();
   for (const friendshipsCannotSolve of friendshipsCannotSolves) {
     studentSet.add(friendshipsCannotSolve[0]);
@@ -24,14 +25,13 @@ var minimumTeachings = function (n, languages, friendships) {
   let languagesMap = new Map();
   for (const item of studentSet.values()) {
     for (let i = 0; i < languages[item - 1].length; i++) {
-      //   console.log(languages[item - 1]);
       languagesMap.set(
         languages[item - 1][i],
         (languagesMap.get(languages[item - 1][i]) || 0) + 1
       );
     }
   }
-  let teach = n;
+  let teach = studentSet.size;
   for (const value of languagesMap.values()) {
     teach = Math.min(teach, studentSet.size - value);
   }
