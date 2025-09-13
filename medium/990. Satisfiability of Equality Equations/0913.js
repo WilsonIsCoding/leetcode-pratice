@@ -16,8 +16,8 @@ var equationsPossible = function (equations) {
     if (equation[1] === "!") {
       console.log(connectionMap);
       if (equation[0] === equation[3]) return false;
-      const connectTargets = connectionMap.get(equation[0]) || [];
-      if (connectTargets.length === 0) continue;
+      const connectTargets = connectionMap.get(equation[0]);
+      if (!connectTargets) continue;
       if (
         connectTargets.indexOf(equation[0]) === -1 &&
         connectionMap.get(equation[3])
@@ -34,7 +34,7 @@ var equationsPossible = function (equations) {
   }
   return true;
 };
-let equations = ["c==c", "f!=a", "f==b", "b==c"];
+let equations = ["e==e", "d!=e", "c==d", "d!=e"];
 // let equations = ["a==b", "b!=a"];
 
 // Output: false
