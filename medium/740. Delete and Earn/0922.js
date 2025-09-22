@@ -16,7 +16,6 @@ var deleteAndEarn = function (nums) {
     dp[i] = Math.max(dp[i - 1], dp[i - 2] + (map.get(i) || 0));
   }
   return dp;
-  //   return map;
 };
 
 let nums = [3, 4, 2];
