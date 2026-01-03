@@ -125,13 +125,13 @@ SELECT student.sname, course.cname,sc.score FROM student
     WHERE sc.score > 70
 
 -- 查詢不及格的課程,並按課程號從大到小排列 學號,課程號,課程名,分數
-SELECT student.sno, course.cno,course.cname,sc.score FROM student
+SELECT student.sno, course.cno, course.cname, sc.score FROM student
     JOIN sc
     ON sc.sno = student.sno
-    JOIN course 
-    ON sc.cno = course.cno
+    JOIN course
+    ON course.cno = sc.cno
     WHERE sc.score < 60
-    ORDER BY course.cno DESC
+    ORDER BY course.cno DESC;
 
 -- 查詢沒學過”諶燕”老師講授的任一門課程的學號,學生姓名
 SELECT student.sno,student.sname FROM student
@@ -166,11 +166,11 @@ SELECT student.sno FROM student
     ON sc sc2.sno = student.sno AND sc2.cno = 'c002'
     WHERE sc1.score > sc2.score
 -- 查詢平均成績大於60 分的同學的學號和平均成績
-SELECT AVG(sc.score), student.sno FROM student
+SELECT student.sno, AVG(sc.score) FROM student
     JOIN sc
     ON sc.sno = student.sno
     GROUP BY student.sno
-    HAVING AVG(sc.score)>60
+    HAVING AVG(sc.score) > 60;
 
 -- 查詢所有同學的學號.姓名.選課數.總成績
 SELECT student.sno,student.sname,COUNT(course.cno), SUM(sc.score) FROM student
@@ -227,6 +227,7 @@ SELECT student.sno, student.sname FROM student
     JOIN sc AS sc002
     ON sc002.sno = student.sno AND sc002.cno = 'c002'
     WHERE sc004.score < sc001.score AND sc004.score < sc002.score
+    
 -- 查詢所有課程成績小於60 分的同學的學號.姓名
 SELECT DISTINCT s.sno, s.sname
 FROM student s
