@@ -39,12 +39,12 @@ insert into student values ('s010','陳美',22,'女');
 insert into student values ('s011','王麗',24,'女');
 insert into student values ('s012','蕭蓉',20,'女');
 
---tno、tname
+-- tno、tname
 insert into teacher values ('t001', '劉陽');
 insert into teacher values ('t002', '諶燕');
 insert into teacher values ('t003', '胡明星');
 
---cno、cname、tno
+-- cno、cname、tno
 insert into course values ('c001','J2SE','t002');
 insert into course values ('c002','Java Web','t002');
 insert into course values ('c003','SSH','t001');
@@ -56,7 +56,7 @@ insert into course values ('c008','DIV+CSS','t001');
 insert into course values ('c009','PHP','t003');
 insert into course values ('c010','EJB3.0','t002');
 
---sno、cno、score
+-- sno、cno、score
 insert into sc values ('s001','c001',78.9);
 insert into sc values ('s002','c001',80.9);
 insert into sc values ('s003','c001',81.9);
