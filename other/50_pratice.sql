@@ -106,15 +106,15 @@ SELECT student.sno, sc.score FROM student
     ON sc.sno = student.sno
     JOIN course
     ON sc.cno = course.cno
-    WHERE course.cname = 'Oracle'
+    WHERE course.cname = 'Oracle' AND sc.score < 60
 
 -- 查詢所有學生的選課 課程名稱
-SELECT student.sname,course.cname FROM student
+SELECT student.sname, course.cname FROM student
     JOIN sc
     ON sc.sno = student.sno
     JOIN course 
     ON sc.cno = course.cno
-    GROUP BY student.sname,course.cname
+    GROUP BY student.sname, course.cname
 
 -- 查詢任何一門課程成績在70 分以上的學生姓名.課程名稱和分數
 SELECT student.sname, course.cname,sc.score FROM student
@@ -134,15 +134,28 @@ SELECT student.sno, course.cno, course.cname, sc.score FROM student
     ORDER BY course.cno DESC;
 
 -- 查詢沒學過”諶燕”老師講授的任一門課程的學號,學生姓名
-SELECT student.sno,student.sname FROM student
-    JOIN sc
-    ON sc.sno = student.sno
-    JOIN course 
-    ON sc.cno = course.cno
-    JOIN teacher
-    ON teacher.tno = course.tno
-    WHERE teacher.tname != '諶燕'
-    GROUP BY student.sno,student.sname 
+SELECT s.sno, s.sname
+FROM student s
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM sc
+    JOIN course c ON c.cno = sc.cno
+    JOIN teacher t ON t.tno = c.tno
+    WHERE sc.sno = s.sno
+      AND t.tname = '諶燕'
+);
+
+SELECT DISTINCT s.sno, s.sname
+FROM student s
+LEFT JOIN sc 
+       ON sc.sno = s.sno
+LEFT JOIN course c 
+       ON c.cno = sc.cno
+LEFT JOIN teacher t 
+       ON t.tno = c.tno
+      AND t.tname = '諶燕'
+WHERE t.tno IS NULL;
+
     
 -- 查詢兩門以上不及格課程的同學的學號及其平均成績
 SELECT student.sno, AVG(sc.score) FROM student
